@@ -47,28 +47,94 @@ e.g. *Select * from [Sheet1$]*
 
 e.g. *Select * from [Sheet1$B1:D10]*
 
+**Here $ indicates the EXCEL table/sheet already exists in workbook, if you want to create a New workbook/sheet, then do not use $, look at the sample below:
 
-
-This C# template lets you get started quickly with a simple one-page playground.
-
-```C# runnable
-// { autofold
-using System;
-
-class Hello 
-{
-    static void Main() 
+``` javascript
+// Connect EXCEL sheet with OLEDB using connection string
+ using (OleDbConnection conn = new OleDbConnection(connectionString))
     {
-// }
-
-Console.WriteLine("Hello World!");
-
-// { autofold
+        conn.Open();
+        OleDbDataAdapter objDA = new System.Data.OleDb.OleDbDataAdapter
+        ("select * from [Sheet1$]", conn);
+        DataSet excelDataSet = new DataSet();
+        objDA.Fill(excelDataSet);
+        dataGridView1.DataSource = excelDataSet.Tables[0];
     }
-}
-// }
+			
+	//In above code '[Sheet1$]' is the first sheet name with '$' as default selector,
+        // with the help of data adaptor we can load records in dataset		
+	
+	//write data in EXCEL sheet (Insert data)
+ using (OleDbConnection conn = new OleDbConnection(connectionString))
+    {
+        try
+        {
+            conn.Open();
+            OleDbCommand cmd = new OleDbCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = @"Insert into [Sheet1$] (month,mango,apple,orange) 
+            VALUES ('DEC','40','60','80');";
+            cmd.ExecuteNonQuery();
+        }
+        catch (Exception ex)
+        {
+            //exception here
+        }
+        finally
+        {
+             conn.Close();
+             conn.Dispose();
+        }
+    }
+			
+//update data in EXCEL sheet (update data)
+using (OleDbConnection conn = new OleDbConnection(connectionString))
+	{
+        try
+        {
+            conn.Open();
+            OleDbCommand cmd = new OleDbCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "UPDATE [Sheet1$] SET month = 'DEC' WHERE apple = 74;";
+            cmd.ExecuteNonQuery();
+        }
+        catch (Exception ex)
+        {
+            //exception here
+        }
+        finally
+        {
+            conn.Close();
+            conn.Dispose();
+        }
+    }
 ```
 
-# Advanced usage
+*OLEDB does not support DELETE query.
 
-If you want a more complex example (external libraries, viewers...), use the [Advanced C# template](https://tech.io/select-repo/386)
+![Media](https://www.codeproject.com/KB/aspnet/1088970/Media.jpg "Media")
+
+### Exceptions, you might faced
+
+1. The 'Microsoft.Jet.OLEDB.4.0' provider is not registered on the local machine.
+**Cause:** The exception occurs when we run our code on 64Bit machine.
+
+**How to Resolve:** If your application is Desktop based, compile your EXE with x86 CPU. If your application is web based, then Enable '32-Bit Applications' in application pool.
+
+2. Deleting data in a linked table is not supported by this ISAM.
+**Cause:** As we have already discussed, OLEDB does not support DELETE operation. If you try to Delete rows from EXCEL sheet, it gives you such exception.
+
+## Advantage against INTEROP/COM object
+
+We know EXCEL Interop application can also be used to complete this task, but there are several advantages against INTEROP/COM object, see the below points:
+
+1. Interop objects are heavy and un-managed objects
+2. Special permissions are needed to launch component services if you run this code as Web application in IIS
+3. No Excel installation is needed when we need to Read/Write Excel using OLEDB. 4. OLEDB is faster in performance than Interop object, as No EXCEL object is created.
+
+## Finally
+There are always two sides of the coin. With OLEDB, you cannot format data that you inserted/updated in EXCEL sheet but Interop can do it efficiently. You cannot perform any mathematical operation or working on graphs using OLEDB, but it is really a good way to insert/update data in EXCEL where no Excel application is installed.
+
+Comments and suggestions are always welcome
+
+Thank you!
