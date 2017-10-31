@@ -1,4 +1,11 @@
 # Introduction
+Are you looking for a way to Read/Write Excel file without Interop com? Want to Read both XLS and XLSX format? Then read this article - it will really help you Read or Write Excel files using OLEDB.
+
+## Background
+In earlier days when I was new to programming, I used to read/write Excel file using Interop object, but it is unmanaged and heavy entity and due to its 'HELL' **performance**, I desperately needed some good alternative to Interop. I have gone through OLEDB, it performs very well for reading and writing Excel files.
+
+## Using Code
+Before start Reading/Writing from/in Excel file, we need to connect to OLEDB using connection string, here OLEDB will act as Bridge between your program and EXCEL.
 
 
 
