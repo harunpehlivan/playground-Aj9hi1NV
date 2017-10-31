@@ -7,6 +7,9 @@ In earlier days when I was new to programming, I used to read/write Excel file u
 ## Using Code
 Before start Reading/Writing from/in Excel file, we need to connect to OLEDB using connection string, here OLEDB will act as Bridge between your program and EXCEL.
 
+![Bridge between C# and EXCEL](https://www.codeproject.com/KB/aspnet/1088970/Bridge.jpg "Bridge between C# and EXCEL")
+
+
 
 
 This C# template lets you get started quickly with a simple one-page playground.
